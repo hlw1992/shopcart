@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{margin: 0;padding: 0;}
+        ul,li{list-style:none}
+        .progress{
+            overflow: hidden;
+        }
+        .progress li{
+            float: left;
+            width: 25%;
+            text-align: center;
+            color: lightgray;
+        }
+        .progress li div:first-child{
+            padding: 20px 0 20px;
+        }
+        .progress li div:last-child{
+            height: 2px;
+            background-color: lightgray;
+        }
+        .current div:first-child{
+            color: orangered;
+        }
+        .current div:last-child{
+            background-color: orangered !important;
+        }
+        .demo_line_01{
+            /* 线的高度 */
+            line-height: 2px;
+            text-align: center;
+            /* padding: 0 10px 0; */
+            /* 显示的高度 */
+            margin: 50px 0;
+            /* 主要修改下面来控制线长, 它不支持百分比 */
+            border-left: 500px solid #ddd;
+            border-right: 500px solid #ddd;
+        }
+        .main{
+            overflow: hidden;
+        }
+        .someAddress{
+            box-sizing: border-box;
+        }
+        .realAddress{
+            width:20%;
+            height: 120px;
+            border: 1px solid lightgray;
+            box-sizing:border-box;  
+            float: left;
+            margin: 5px 2.5%;
+            padding: 5px;
+        }
+        .realAddress:hover{
+            border: 1px solid orange;
+            
+        }
+        .check{
+            border: 1px solid red;
+        }
+        .isDefault{
+            color: orange;
+        }
+        .addNewAddress{
+            width:20%;
+            height: 120px;
+            border: 1px solid lightgray;
+            box-sizing:border-box;  
+            float: left;
+            margin:5px 2.5%;
+            text-align: center;
+        }
+        .deliverWay{
+            overflow: hidden;
+            text-align: center;
+        }
+        .deliverWay div{
+            width:20%;
+            height: 80px;
+            box-sizing:border-box;  
+            float: left;
+            line-height: 40px;
+            border: 1px solid lightgray;
+            color:gray;
+        }
+        .deliverWay div:hover{
+            border: 1px solid orange;
+        }
+        .deliverWay div:first-child{
+            margin:5px 2.5% 5px 27.5%;
+        }
+        .deliverWay div:last-child{
+            margin:5px 27.5% 5px 2.5%;
+        }
+        .currentDeliver{
+            border: 1px solid red !important;
+            color: black !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+
+        <ul class='progress'>
+            <li class='current'>
+                <div>地址确认</div>
+                <div></div>
+            </li>
+            <li>
+                <div>查看订单</div>
+                <div></div>
+            </li>
+            <li>
+                <div>支付</div>
+                <div></div>
+            </li>
+            <li>
+                <div>订单确认</div>
+                <div></div>
+            </li>
+        </ul>
+    
+        <div class='demo_line_01'>配送地址</div>
+    
+        <div class='main'>
+    
+            <div class='someAddress'>
+                <!-- 过滤 显示为3个地址 -->
+                <div class='realAddress' v-for="(item,index) in filterAddress" v-bind:class="{'check':index==currentIndex}" @click="currentIndex=index">
+                    <div>{{item.userName}}</div>
+                    <div>{{item.streetName}}</div>
+                    <div>{{item.tel}}</div>
+                    <br>
+                    <div class='' v-if="!item.isDefault">
+                            <a href="javascript:;" @click="setDefault(item.addressId)">
+                                设为默认
+                            </a>
+                    </div>
+                    <div class='isDefault' v-if="item.isDefault">默认地址</div>
+                </div>
+            </div>
+            <div class='addNewAddress'>
+                <img src="img/添加.png" alt="" style='height: 40px;width:40px;display: inline-block;vertical-align: middle;margin-top:20px; '>
+                <div>
+                    添加新地址
+                </div>
+            </div>
+            
+        </div>
+        <div style="text-align: center;color: orange;margin-top:20px;cursor: pointer;" @click="loadMore()" v-if="!alreadyMore">more</div>
+    
+        <div class='demo_line_01'>配送方式</div>
+        <div class='deliverWay'>
+            <div v-bind:class="{'currentDeliver':shippingMethod==1}" @click="shippingMethod=1">标准配送<br/>FREE</div>
+            <div v-bind:class="{'currentDeliver':shippingMethod==2}" @click="shippingMethod=2">高级配送<br/>180</div>
+        </div>
+    </div>
+    <script src="node_modules/vue/dist/vue.js"></script>
+    <script src="node_modules/vue-resource/dist/vue-resource.js"></script>
+    <script src="js/address.js"></script>
+</body>
+</html>

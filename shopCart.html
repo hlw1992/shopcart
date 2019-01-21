@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{margin: 0;padding: 0;}
+        ul,li{list-style:none}
+        .demo_line_01{
+            /* 线的高度 */
+            line-height: 2px;
+            text-align: center;
+            /* padding: 0 10px 0; */
+            /* 显示的高度 */
+            margin: 20px 0;
+            /* 主要修改下面来控制线长, 它不支持百分比 */
+            border-left: 500px solid #ddd;
+            border-right: 500px solid #ddd;
+        }
+        .showBar{
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            color: white;
+            background-color: gray;
+        }
+        .showBar li{
+            float: left;
+            width:12.5%;
+        }
+        .showBar li:first-child{
+            width: 50%;
+        }
+        .showItem{
+            overflow: hidden;
+            text-align: center;
+            height: 200px;
+            line-height: 200px;
+            border-bottom: 1px solid #ddd;
+            padding-left:20px;
+        }
+        .showItem li{
+            float: left;
+            width:12.5%;
+            height: 200px;
+            overflow: hidden;
+        }
+        .showItem li:first-child{
+            text-align: left;
+            width: 50%;
+            position: relative;
+        }
+        .showItem li:first-child img{
+            display: inline-block;
+            vertical-align: middle;
+            margin: 10px;
+            width:100px;
+            height:95px;
+        }
+        /* 首先隐藏 默认的checkbox多选框 */
+        input[type="checkbox"]{
+            display: none;
+        }
+        
+        /*未选中checkbox时*/        
+        .input_check+span {
+            /* 背景图容器span尺寸 */
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            /* 背景图居中 */
+            vertical-align:middle;
+            background: url(img/check-box-blank.png) no-repeat;
+            /* 背景图限制尺寸 */
+            background-size:20px 20px;
+        }
+        /*选中checkbox时*/            
+        .checked+span {
+            background: url(img/check-box.png) no-repeat;
+            background-size:20px 20px;
+        }
+        .shang{
+            /* display: inline-block; */
+            /* width:90px; */
+            height: 100px;
+            line-height: 120px;
+            position: absolute;
+            top:0;
+            left:200px;
+        }
+        .xia{
+            /* display: inline-block; */
+            /* width:90px; */
+            height: 100px;
+            line-height: 80px;
+            color: gray;
+            position: absolute;
+            bottom:0;
+            left:200px;
+        }
+        .pointer{
+            cursor: pointer;
+        }
+        /* ---------- */
+        .top{
+            height: 100px;
+            line-height: 170px;
+        }
+        .top span{
+            cursor: pointer;
+            -moz-user-select: none; /*火狐去除蓝底*/
+            user-select: none;
+        }
+        .top input{
+            display: inline-block;
+            text-align: center;
+            width: 36px;
+        }
+        .bottom{
+            height: 100px;
+            line-height: 30px;
+            color: gray;
+        }
+        
+        .showItem li:nth-child(4){
+            color: red;
+        }
+        .showItem li:last-child img{
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .showTotal{
+            text-align: center;
+            height: 100px;
+            line-height: 100px;
+            padding-left:20px;
+        }
+        .showTotal li{
+            float: left;
+            width:25%;
+            overflow:hidden;
+        }
+        .showTotal li:first-child{
+            width: 50%;
+            text-align: left;
+        }
+        .showTotal li:first-child span{
+            margin:10px;
+        }
+        .org{
+            color: orange;
+        }
+        .showTotal li:nth-child(2){
+            text-align: right;
+        }
+        .showTotal li:last-child div{
+            float: right;
+            height: 50px;
+            line-height: 50px;
+            width: 80%;
+            margin-top: 25px;
+            background-color: orangered;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        
+        <div class='demo_line_01'>购物车</div>
+        <ul class='showBar'>
+            <li>商品信息</li>
+            <li>商品金额</li>
+            <li>商品数量</li>
+            <li>总金额</li>
+            <li>编辑</li>
+        </ul>
+        
+        <ul class='showItem' v-for='item in productList'>
+            <li>
+                <input type="checkbox" class='input_check' :class="{'checked':item.checked}">
+                <!-- span是显示背景图的容器 -->
+                <span  @click='selectProduct(item)'></span>
+                <img :src="item.productImage" alt="">
+                <div class='shang'>
+                    {{item.productName}}
+                </div>
+                <div class='xia'>
+                    赠送: <span v-for="part in item.parts">{{part.partsName}} </span>
+                </div>
+    
+            </li>
+            <!-- filter的使用, 使数字有两位小数 -->
+            <li>{{item.productPrice | formatMoney}}</li>
+            <li>
+                <div class='top'>
+                    <span @click='changeQuentity(item,-1)'> - </span>
+                    <input type="text" name="" id="" value='0' v-model='item.productQuentity'>
+                    <span @click='changeQuentity(item,1)'> + </span>
+                </div>
+                <div class='bottom'>
+                    <span>有货</span>
+                </div>
+                
+            </li>
+            <li>{{item.productPrice*item.productQuentity | formatMoney}}</li>
+            <li><img src="img/del.png" alt="" @click="delItem(item)"></li>
+        </ul>
+    
+        <ul class='showTotal'>
+            <li>
+                <input type="checkbox" class='input_check' :class="{'checked':isCheckedAll}">
+                <span @click='selectAll(true)'></span>
+                <span class='org' @click='selectAll(true)' class='pointer'>全选</span>
+                <span @click='selectAll(false)' class='pointer'>取消全选</span>
+            </li>
+            <li>
+                <span>总价: <span>{{totalPrice | formatMoney}}</span></span>
+            </li>
+            <li>
+                <div>结账</div>
+            </li>
+        </ul>
+    </div>
+    <script src="node_modules/vue/dist/vue.min.js"></script>
+    <script src="node_modules/vue-resource/dist/vue-resource.min.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>
